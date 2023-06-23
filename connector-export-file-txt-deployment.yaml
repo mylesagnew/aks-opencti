@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: connector-export-file-txt
+  name: connector-export-file-txt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: connector-export-file-txt
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.28.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/aks-opencti-default: "true"
+        io.kompose.service: connector-export-file-txt
+    spec:
+      containers:
+        - env:
+            - name: CONNECTOR_CONFIDENCE_LEVEL
+              value: "15"
+            - name: CONNECTOR_ID
+              value: ${CONNECTOR_EXPORT_FILE_TXT_ID}
+            - name: CONNECTOR_LOG_LEVEL
+              value: info
+            - name: CONNECTOR_NAME
+              value: ExportFileTxt
+            - name: CONNECTOR_SCOPE
+              value: text/plain
+            - name: CONNECTOR_TYPE
+              value: INTERNAL_EXPORT_FILE
+            - name: OPENCTI_TOKEN
+              value: ${OPENCTI_ADMIN_TOKEN}
+            - name: OPENCTI_URL
+              value: http://opencti:8080
+          image: opencti/connector-export-file-txt:5.8.2
+          name: connector-export-file-txt
+          resources: {}
+      restartPolicy: Always
+status: {}

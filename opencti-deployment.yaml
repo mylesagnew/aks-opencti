@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: opencti
+  name: opencti
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: opencti
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.28.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/aks-opencti-default: "true"
+        io.kompose.service: opencti
+    spec:
+      containers:
+        - env:
+            - name: APP__ADMIN__EMAIL
+              value: ${OPENCTI_ADMIN_EMAIL}
+            - name: APP__ADMIN__PASSWORD
+              value: ${OPENCTI_ADMIN_PASSWORD}
+            - name: APP__ADMIN__TOKEN
+              value: ${OPENCTI_ADMIN_TOKEN}
+            - name: APP__APP_LOGS__LOGS_LEVEL
+              value: error
+            - name: APP__BASE_URL
+              value: ${OPENCTI_BASE_URL}
+            - name: APP__PORT
+              value: "8080"
+            - name: ELASTICSEARCH__URL
+              value: http://elasticsearch:9200
+            - name: MINIO__ACCESS_KEY
+              value: ${MINIO_ROOT_USER}
+            - name: MINIO__ENDPOINT
+              value: minio
+            - name: MINIO__PORT
+              value: "9000"
+            - name: MINIO__SECRET_KEY
+              value: ${MINIO_ROOT_PASSWORD}
+            - name: MINIO__USE_SSL
+              value: "false"
+            - name: NODE_OPTIONS
+              value: --max-old-space-size=8096
+            - name: PROVIDERS__LOCAL__STRATEGY
+              value: LocalStrategy
+            - name: RABBITMQ__HOSTNAME
+              value: rabbitmq
+            - name: RABBITMQ__MANAGEMENT_SSL
+              value: "false"
+            - name: RABBITMQ__PASSWORD
+              value: ${RABBITMQ_DEFAULT_PASS}
+            - name: RABBITMQ__PORT
+              value: "5672"
+            - name: RABBITMQ__PORT_MANAGEMENT
+              value: "15672"
+            - name: RABBITMQ__USERNAME
+              value: ${RABBITMQ_DEFAULT_USER}
+            - name: REDIS__HOSTNAME
+              value: redis
+            - name: REDIS__PORT
+              value: "6379"
+            - name: SMTP__HOSTNAME
+              value: ${SMTP_HOSTNAME}
+            - name: SMTP__PORT
+              value: "25"
+          image: opencti/platform:5.8.2
+          name: opencti
+          ports:
+            - containerPort: 8080
+          resources: {}
+      restartPolicy: Always
+status: {}

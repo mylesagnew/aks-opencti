@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: worker
+  name: worker
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      io.kompose.service: worker
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.28.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/aks-opencti-default: "true"
+        io.kompose.service: worker
+    spec:
+      containers:
+        - env:
+            - name: OPENCTI_TOKEN
+              value: ${OPENCTI_ADMIN_TOKEN}
+            - name: OPENCTI_URL
+              value: http://opencti:8080
+            - name: WORKER_LOG_LEVEL
+              value: info
+          image: opencti/worker:5.8.2
+          name: worker
+          resources: {}
+      restartPolicy: Always
+status: {}
