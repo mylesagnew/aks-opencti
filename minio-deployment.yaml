@@ -1,3 +1,6 @@
+# MINIO Deployment
+#
+# Status: UNTESTED
 apiVersion: apps/v1
 kind: Deployment
 metadata:

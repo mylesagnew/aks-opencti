@@ -1,3 +1,6 @@
+# REDIS STORAGE
+#
+# STATUS: UNTESTED
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -10,5 +13,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
+      storage: 25G
 status: {}
